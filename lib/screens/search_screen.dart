@@ -11,47 +11,50 @@ import 'package:flutter_qiita_search/models/article.dart';
 // 記事コンテナのインポート
 import 'package:flutter_qiita_search/widgets/article_container.dart';
 
-/// 検索画面のステートフルエンドポイント。
+/// 検索画面ステートフルのエンドポイント。
 class SearchScreen extends StatefulWidget {
   // コンストラクタ。キーを振るだけ
   const SearchScreen({super.key});
 
-  // 実際はステートレスの検索画面を呼ぶだけ
+  // ステートクラスを生成
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-/// 検索画面のステートレスエンドポイント。
+/// 検索画面のステートクラス。
 class _SearchScreenState extends State<SearchScreen> {
   // 検索結果を格納する変数
-  List<Article> articles = []; 
+  List<Article> articles = [];
   // Widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // 画面にAppBarを作成
       appBar: AppBar(
-        title: const Text('Qiita Search Test'),
+        title: const Text('Qiita Search'),
       ),
       body: Column(
         children: [
           // 検索ボックス
-          Padding( // ← Paddingで囲む
+          Padding(
+            // ← Paddingで囲む
             padding: const EdgeInsets.symmetric(
               vertical: 12,
               horizontal: 36,
             ),
             child: TextField(
-              style: TextStyle( // ← TextStyleを渡す
-              fontSize: 18,
+              style: TextStyle(
+                // ← TextStyleを渡す
+                fontSize: 18,
                 color: Colors.black,
               ),
-              decoration: InputDecoration( // ← InputDecorationを渡す。Inputの装飾
+              decoration: InputDecoration(
+                // ← InputDecorationを渡す。Inputの装飾
                 hintText: '検索ワードを入力してください',
               ),
               onSubmitted: (String value) async {
                 final results = await searchQiita(value); // ← 検索処理を実行する
-                setState(()=>articles = results); // 検索結果を代入
+                setState(() => articles = results); // 検索結果を代入
               },
             ),
           ),
@@ -68,14 +71,15 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  /// Qiita API で検索結果リストを取得。
   Future<List<Article>> searchQiita(String keyword) async {
     // 1. http通信に必要なデータを準備をする
-    //   - URL、クエリパラメータの設定
+    // URL、クエリパラメータの設定
     final uri = Uri.https('qiita.com', '/api/v2/items', {
       'query': 'title:$keyword',
       'per_page': '10',
     });
-    //   - アクセストークンの取得
+    // アクセストークンの取得
     final String token = dotenv.env['QIITA_ACCESS_TOKEN'] ?? '';
 
     // 2. Qiita APIにリクエストを送る
@@ -94,4 +98,3 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 }
-

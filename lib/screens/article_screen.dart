@@ -1,9 +1,10 @@
 // 画面ライブラリのインポート
 import 'package:flutter/material.dart';
+
 /// 記事モデルのインポート
 import 'package:flutter_qiita_search/models/article.dart';
 // webview_flutterライブラリのインポート
- import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 /// 記事画面のステートフルエンドポイント。
 class ArticleScreen extends StatefulWidget {
@@ -13,21 +14,22 @@ class ArticleScreen extends StatefulWidget {
     required this.article,
   });
 
-    // 記事モデル
+  // 記事モデル
   final Article article;
 
-  // 実際はステートレスの記事画面を呼ぶだけ
+  // ステートクラスを生成
   @override
   State<ArticleScreen> createState() => _ArticleScreenState();
 }
 
-/// 記事画面のステートレスエンドポイント。
+/// 記事画面のステートクラス。
 class _ArticleScreenState extends State<ArticleScreen> {
   late WebViewController controller = WebViewController()
+    // カスケードオペレータ(..)を使って、コンストラクタの後にloadRequestを実行
     ..loadRequest(
       Uri.parse(widget.article.url),
     );
-  
+
   // Widget
   @override
   Widget build(BuildContext context) {
